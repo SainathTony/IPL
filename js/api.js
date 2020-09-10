@@ -36,6 +36,8 @@ function getAllTeams(){
         grid.setAttribute('class', 'grid');
         for(let team of responseAsJson){
             console.log(team);
+            localStorage.setItem(team.id+'year', team.winningYears);
+            localStorage.setItem(team.id+'venue', team.venue);
             var ui = createTeamUi(team.id, team.teamName, team.winningYears, team.venue);
             grid.appendChild(ui);
         }
@@ -68,6 +70,14 @@ function getTeamData(team_name){
         var captain = getCaptain(responseAsJson.team.captainId, responseAsJson.players);
         document.getElementById('team_cap').textContent = captain.name;
         var banner = document.getElementById('team_layer').classList.add(getCardClass(team_name));
+
+        console.log('Team name=>', team_name);
+
+        var winning_years = localStorage.getItem(team_name+'year');
+        document.getElementById('winning_years').textContent = winning_years;
+
+        var venue_place = localStorage.getItem(team_name+'venue');
+        document.getElementById('team_venue').textContent = venue_place;
 
         var container = document.getElementById('profiles_container');
         title.textContent = team_name;
@@ -272,8 +282,10 @@ function getProfileUI(team_name, player, team){
 
 function showErrorPage(error){
     var errorTitle = document.createElement('h1');
-        errorTitle.textContent = 'Something went wrong';
+        errorTitle.setAttribute('class', 'errorTitle');
+        errorTitle.textContent = 'Something went wrong :(';
         var errorText = document.createElement('h3');
+        errorText.setAttribute('class', 'errorText');
         errorText.textContent = error;
         var app = document.getElementById('app');
         app.appendChild(errorTitle);

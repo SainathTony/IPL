@@ -218,16 +218,20 @@ h5{
 .card a{
     display: block;
     margin-top: 20px;
-    color: #fff;
+    color: rgb(252, 233, 233);
     cursor: pointer;
+    text-decoration: none;
 }
-
+a:hover{
+    color: #fff;
+}
 
 #team_banner{
     position: relative;
     width: 100%;
     height: auto;
     background-image: url(../assets/images/winner.jpg);
+    /* background-repeat: no-repeat; */
     background-size: 100%;
 }
 #team_banner .layer{
@@ -236,6 +240,7 @@ h5{
     width: 100%;
     height: 100%;
     display: grid;
+    padding: 10px;
     grid-template-columns: repeat(12, 1fr);
 }
 #team_banner .logo_container{
@@ -245,12 +250,20 @@ h5{
 #team_banner .content{
     grid-column: 1/13;
     text-align: center;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
 }
 #team_banner .content h1{
     color: #fff;
     font-size: 2em;
+    grid-column: 1/13;
 }
-
+#team_banner .years{
+    grid-column: 1/13;
+}
+#team_banner .venue_cap{
+    grid-column: 1/13;
+}
 #team_banner .trophy{
     display: block;
     color: #fff;
@@ -294,6 +307,14 @@ h5{
     padding: 10px;
 }
 
+.errorTitle{
+    text-align: center;
+    color: #da5768;
+}
+.errorText{
+    text-align: center;
+    color: #ee0371;
+}
 /* Tablet View */   
 @media screen and (min-width: 620px){
     .col:nth-child(1){
