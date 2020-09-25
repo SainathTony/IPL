@@ -1,27 +1,23 @@
-'use stict';
+class Route{
+    name = undefined;
+    htmlName = undefined;
+    defaultRoute = undefined;
 
-function Route(name, htmlName, defaultRoute){
-    try{
-        if(!name || !htmlName){
-            throw 'error:  name and html page sourse is required';
+    constructor(name, htmlName, defaultRoute){
+        try{
+            if(!name || !htmlName){
+                throw "error: parameters cannot be empty";
+            }
+        }catch(e){
+            console.log(e);
         }
-        this.constructor(name, htmlName, defaultRoute);
-    }catch(e){
-        console.log(e);
+        this.name = name;
+        this.htmlName = htmlName;
+        this.defaultRoute = defaultRoute;
     }
-}
 
-Route.prototype = {
-        name: undefined,
-        htmlName: undefined,
-        default: undefined,
-        constructor: function(name, htmlName, defaultRoute){
-            this.name = name;
-            this.htmlName = htmlName;
-            this.default = defaultRoute;
-        },
+    isActiveRoute(path){
+        return path.replace('#', '') === this.name;
+    }
 
-        isActiveRoute: function(hashedPath){
-            return hashedPath.replace('#', '') === this.name;
-        }
 }

@@ -1,23 +1,22 @@
-function apiCall(url){
-    var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    fetch(proxyUrl + url).then(function(response){
-        if(!response.ok){
-            throw Error(response.statusText);
-        }
-        return response.json();
-    }).then(function(responseAsJson){
-        console.log(responseAsJson);
-        return responseAsJson;
-    }).catch(function(error){
-        console.log('Got error', error);
-    })
-}
+// function apiCall(url){
+//     var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+//     fetch(proxyUrl + url).then(function(response){
+//         if(!response.ok){
+//             throw Error(response.statusText);
+//         }
+//         return response.json();
+//     }).then(function(responseAsJson){
+//         console.log(responseAsJson);
+//         return responseAsJson;
+//     }).catch(function(error){
+//         console.log('Got error', error);
+//     })
+// }
 
 console.log('API JS'); 
 
 function getAllTeams(){
-    document.getElementById('app').style.opacity = 0;
-        document.getElementById('loader').style.opacity = 1;
+    showLoader();
     console.log('calling teams');
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const url = 'https://ipl-t20.herokuapp.com/teams';
@@ -28,32 +27,28 @@ function getAllTeams(){
         return response.json();
     }).then(function(responseAsJson){
         //console.log(responseAsJson);
-        document.getElementById('app').style.opacity = 1;
-        document.getElementById('loader').style.opacity = 0;
         var container = document.getElementById('container');
         //container.textContent = 'Hellow there';
         var grid = document.createElement('div');
         grid.setAttribute('class', 'grid');
         for(let team of responseAsJson){
-            console.log(team);
+            //console.log(team);
             localStorage.setItem(team.id+'year', team.winningYears);
             localStorage.setItem(team.id+'venue', team.venue);
             var ui = createTeamUi(team.id, team.teamName, team.winningYears, team.venue);
             grid.appendChild(ui);
         }
         container.appendChild(grid);
+        stopLoader();
         
     }).catch(function(error){
         console.log('Got error', error);
-        document.getElementById('app').style.opacity = 1;
-        document.getElementById('loader').style.opacity = 0;
         showErrorPage(error);
     })  
 }
 
 function getTeamData(team_name){
-    document.getElementById('app').style.opacity = 0;
-    document.getElementById('loader').style.opacity = 1;
+   showLoader();
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const url = 'https://ipl-t20.herokuapp.com/teams/'+team_name;
     fetch(proxyUrl + url).then(function(response){
@@ -88,15 +83,12 @@ function getTeamData(team_name){
             grid.appendChild(ui);
         }
         container.appendChild(grid);
-        document.getElementById('app').style.opacity = 1;
-        document.getElementById('loader').style.opacity = 0;
+        stopLoader();
     }).catch(function(error){
         console.log('Got error', error);
-        var container = document.getElementById('team_banner');
-        container.style.display = 'none';
+        //var container = document.getElementById('team_banner');
+        //container.style.display = 'none';
         showErrorPage(error);
-        document.getElementById('app').style.opacity = 1;
-        document.getElementById('loader').style.opacity = 0;
     })
 }
 
@@ -108,12 +100,16 @@ function createTeamUi(id, name, _trophies, venue){
     var card = document.createElement('div');
     card.setAttribute('class', 'card '+getCardClass(name));
 
+    var card_container = document.createElement('div');
+    card_container.setAttribute('class', 'card_container');
+
     var logo_container = document.createElement('div');
     logo_container.setAttribute('class', 'logo_container');
 
     var img = document.createElement('img');
     img.setAttribute('src', './assets/logos/'+getLogo(name));
-
+    var text_container = document.createElement('div');
+    text_container.setAttribute('class', 'text_container');
     var team_name = document.createElement('h3');
     team_name.textContent = name;
 
@@ -128,10 +124,13 @@ function createTeamUi(id, name, _trophies, venue){
         _trophies.forEach(year => {
            trophy_years+=year+', '; 
         });
-        trophies.textContent =  trophy_years;
         var trophi_logo = document.createElement('i');
+        var years = document.createElement('b');
+        trophy_years = trophy_years.slice(0, trophy_years.length-2);
+        years.textContent = trophy_years;
         trophi_logo.setAttribute('class', 'fa fa-trophy');
         trophies.appendChild(trophi_logo);
+        trophies.appendChild(years);
     }else{
         trophies.setAttribute('class', 'no-trophy');
     }
@@ -142,10 +141,14 @@ function createTeamUi(id, name, _trophies, venue){
 
     logo_container.appendChild(img);
     
-    card.appendChild(logo_container);
-    card.appendChild(team_name);
-    card.appendChild(place);
-    card.appendChild(trophies);
+    text_container.appendChild(team_name);
+    text_container.appendChild(place);
+    text_container.appendChild(trophies);
+
+    card_container.appendChild(logo_container);
+    card_container.appendChild(text_container);
+    
+    card.appendChild(card_container);
     card.appendChild(anchor);
 
     col.appendChild(card);
@@ -156,21 +159,21 @@ function createTeamUi(id, name, _trophies, venue){
 
 function getLogo(name){
     if(name === 'Chennai Super Kings' || name === 'chennai-super-kings'){
-        return 'Chennai-Super-Kings-Logo-PNG.png';
+        return 'csk.png';
     }else if(name === 'Delhi Capitals' || name === 'delhi-capitals'){
-        return 'Delhi-Daredevils-Logo-PNG.png';
+        return 'dc.png';
     }else if(name === 'Kings XI Punjab' || name === 'kings-xi-punjab'){
-        return 'Kings-XI-Punjab-Logo-PNG.png';
+        return 'kxp.png';
     }else if(name === 'Royal Challengers Bangalore' || name === 'royal-challengers-bangalore'){
-        return 'Royal-Challengers-Bangalore-Logo-PNG.png';
+        return 'rcb.png';
     }else if(name === 'Kolkata Knight Riders' || name === 'kolkata-knight-riders'){
-        return 'Kolkata-Knight-Riders-Logo-PNG.png';
+        return 'kkr.png';
     }else if(name === 'Mumbai Indians' || name === 'mumbai-indians'){
-        return 'Mumbai-Indians-Logo-PNG.png';
+        return 'mi.png';
     }else if(name === 'Rajasthan Royals' || name === 'rajasthan-royals'){
-        return 'Rajasthan-Royals-Logo-PNG.png';
+        return 'rr.png';
     }else{
-        return 'Sun-Risers-Logo-PNG.png';
+        return 'srh.png';
     }
 }
 
@@ -281,15 +284,10 @@ function getProfileUI(team_name, player, team){
 
 
 function showErrorPage(error){
-    var errorTitle = document.createElement('h1');
-        errorTitle.setAttribute('class', 'errorTitle');
-        errorTitle.textContent = 'Something went wrong :(';
-        var errorText = document.createElement('h3');
-        errorText.setAttribute('class', 'errorText');
-        errorText.textContent = error;
-        var app = document.getElementById('app');
-        app.appendChild(errorTitle);
-        app.appendChild(errorText);
+    app.router.gotoRoute('error.html', 'error');
+    stopLoader();
+    //document.getElementById('errorInfo').textContent = error;
+    alert(error);
 }
 
 
@@ -315,5 +313,18 @@ function isWicketKeeper(playerId, team){
     }else{
         return false;
     }
+}
+
+
+function stopLoader(){
+    console.log('loader stopped');
+    document.getElementById('app').style.opacity = 1;
+    document.getElementById('loader').style.opacity = 0;
+}
+
+function showLoader(){
+    console.log('loader started');
+    document.getElementById('app').style.opacity = 0;
+    document.getElementById('loader').style.opacity = 1;
 }
 // getAllTeams();

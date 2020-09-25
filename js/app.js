@@ -17,6 +17,7 @@ const routes = [
     new Route('rajasthan-royals', 'team.html'),
     new Route('royal-challengers-bangalore', 'team.html'),
     new Route('sunrisers-hyderabad', 'team.html'),
+    new Route('error', 'error.html')
 
 ];
 
