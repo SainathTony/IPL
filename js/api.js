@@ -136,7 +136,7 @@ function createTeamUi(id, name, _trophies, venue){
     }
 
     var anchor = document.createElement('a');
-    anchor.setAttribute('href', '/#/'+id);
+    anchor.setAttribute('href', '#/'+id);
     anchor.textContent = 'View Team';
 
     logo_container.appendChild(img);

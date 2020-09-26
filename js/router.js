@@ -52,6 +52,7 @@ class Router{
                 }
                 else if(name == 'error'){
                     console.log('error page loaded');
+                    window.location.hash = '/error';
                     stopLoader();
                 }else{
                     getTeamData(name);
