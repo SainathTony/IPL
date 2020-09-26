@@ -6,6 +6,7 @@ class Router{
         console.log('Hash changed=>', window.location.hash);
         if(window.location.hash.length > 0){
             this.routes.forEach(route => {
+                console.log(window.location.hash.substr(2));
                 if(route.isActiveRoute(window.location.hash.substr(1))){
                     this.gotoRoute(route.htmlName, route.name);
                 }

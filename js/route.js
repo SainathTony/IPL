@@ -17,7 +17,8 @@ class Route{
     }
 
     isActiveRoute(path){
-        return path.replace('#', '') === this.name;
+        console.log('Comparing', path, 'and', this.name);
+        return path.replace('/', '') === this.name;
     }
 
 }

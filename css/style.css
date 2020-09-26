@@ -54,6 +54,7 @@ h5{
 .grid{
     display: grid;
     grid-template-columns: repeat(12, 1fr);
+    padding: 10%;
 }
 
 .app{
@@ -454,6 +455,9 @@ a:hover{
     .card .image_container img{
         max-width: 70%;
     }
+    .grid{
+        padding: 5px;
+    }
 
 }
 
@@ -543,6 +547,9 @@ a:hover{
     }
     .card .image_container img{
         max-width: 70%;
+    }
+    .grid{
+        padding: 0;
     }
 }
 
