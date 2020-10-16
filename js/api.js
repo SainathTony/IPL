@@ -69,7 +69,11 @@ function getTeamData(team_name){
         console.log('Team name=>', team_name);
 
         var winning_years = localStorage.getItem(team_name+'year');
-        document.getElementById('winning_years').textContent = winning_years;
+        if(winning_years){
+            document.getElementById('winning_years').textContent = winning_years;
+        }else{
+            document.getElementById('winning_years').style.display = 'none';
+        }
 
         var venue_place = localStorage.getItem(team_name+'venue');
         document.getElementById('team_venue').textContent = venue_place;
@@ -100,21 +104,23 @@ function createTeamUi(id, name, _trophies, venue){
     var card = document.createElement('div');
     card.setAttribute('class', 'card '+getCardClass(name));
 
-    var card_container = document.createElement('div');
-    card_container.setAttribute('class', 'card_container');
+    var card_view = document.createElement('div');
+    card_view.setAttribute('class', 'card_view');
 
-    var logo_container = document.createElement('div');
-    logo_container.setAttribute('class', 'logo_container');
+    var team_data = document.createElement('div');
+    team_data.setAttribute('class', 'team-data');
 
     var img = document.createElement('img');
     img.setAttribute('src', './assets/logos/'+getLogo(name));
-    var text_container = document.createElement('div');
-    text_container.setAttribute('class', 'text_container');
-    var team_name = document.createElement('h3');
-    team_name.textContent = name;
 
-    var place = document.createElement('h5');
-    place.textContent = venue;
+    var team_name = document.createElement('div');
+    team_name.setAttribute('class', 'team_name');
+
+    var h5 = document.createElement('h5');
+    h5.textContent = name;
+
+    var p = document.createElement('p');
+    p.textContent = venue;
 
     var trophies = document.createElement('span');
 
@@ -133,25 +139,27 @@ function createTeamUi(id, name, _trophies, venue){
         trophies.appendChild(years);
     }else{
         trophies.setAttribute('class', 'no-trophy');
+        //trophies.textContent = 'No trophies';
     }
 
     var anchor = document.createElement('a');
-    anchor.setAttribute('href', '#/'+id);
+    anchor.setAttribute('href', '#/teams/'+id);
     anchor.textContent = 'View Team';
 
-    logo_container.appendChild(img);
-    
-    text_container.appendChild(team_name);
-    text_container.appendChild(place);
-    text_container.appendChild(trophies);
+    team_name.appendChild(h5);
+    team_name.appendChild(p);
+    team_name.appendChild(trophies);
 
-    card_container.appendChild(logo_container);
-    card_container.appendChild(text_container);
-    
-    card.appendChild(card_container);
-    card.appendChild(anchor);
+    team_data.appendChild(img);
+    team_data.appendChild(team_name);
+
+    card_view.appendChild(team_data);
+    card_view.appendChild(anchor);
+
+    card.appendChild(card_view);
 
     col.appendChild(card);
+
     return col;
 }
 
@@ -205,11 +213,17 @@ function getProfileUI(team_name, player, team){
     var card = document.createElement('div');
     card.setAttribute('class', 'card '+getCardClass(team_name));
 
-    var image_container = document.createElement('div');
-    image_container.setAttribute('class', 'image_container');
+    var profile_image = document.createElement('div');
+    profile_image.setAttribute('class', 'profile_image');
 
-    var icon_container = document.createElement('div');
-    icon_container.setAttribute('class', 'icons');
+    var card_body = document.createElement('div');
+    card_body.setAttribute('class', 'card-body');
+
+    var player_data = document.createElement('div');
+    player_data.setAttribute('class','player_data');
+
+    icon_container = document.createElement('div');
+    icon_container.setAttribute('class', 'icon_container');
 
     if(isCaptain(player.id, team)){
         var captain_icon = document.createElement('i');
@@ -226,7 +240,6 @@ function getProfileUI(team_name, player, team){
         nationality.setAttribute('class', 'fa fa-plane foreign');
         icon_container.appendChild(nationality);
     }
-    image_container.appendChild(icon_container);
 
     var content = document.createElement('div');
     content.setAttribute('class', 'content');
@@ -244,13 +257,13 @@ function getProfileUI(team_name, player, team){
     year.textContent = 'IPL 2019';
 
     var stats = document.createElement('div');
-    stats.setAttribute('class', 'stats');
+    stats.setAttribute('class', 'player_stats');
 
     for(var key in player.stats){
         if(player.stats.hasOwnProperty(key)){
             var item = document.createElement('div');
-            item.setAttribute('class', 'item');
-            var item_val = document.createElement('h3');
+            item.setAttribute('class', 'stat');
+            var item_val = document.createElement('h5');
             item_val.textContent = player.stats[key];
             var title = document.createElement('span');
             title.textContent = key;
@@ -265,28 +278,31 @@ function getProfileUI(team_name, player, team){
     var anchor = document.createElement('a');
     anchor.textContent = 'View Profile';
 
-    content.appendChild(first_name);
-    content.appendChild(last_name);
-    content.appendChild(year);
-    content.appendChild(stats);
+    player_data.appendChild(first_name);
+    player_data.appendChild(last_name);
+    player_data.appendChild(year);
 
-    image_container.appendChild(img);
+    card_body.appendChild(player_data);
+    card_body.appendChild(stats);
+    card_body.appendChild(icon_container);
 
-    card.appendChild(image_container);
-    card.appendChild(content);
-    card.appendChild(anchor);
+    profile_image.appendChild(img);
+
+    card.appendChild(profile_image);
+    card.appendChild(card_body);
 
     col.appendChild(card);
+
     return col;
-
-
 }
 
 
 function showErrorPage(error){
+    let app = new App(routes);
+    console.log('sending error.html');  
     app.router.gotoRoute('error.html', 'error');
     stopLoader();
-    //document.getElementById('errorInfo').textContent = error;
+    document.getElementById('errorInfo').textContent = error;
     alert(error);
 }
 

@@ -3,20 +3,19 @@ class Router{
     appContainer = undefined;
 
     hashChanged(){
-        console.log('Hash changed=>', window.location.hash);
-        if(window.location.hash.length > 0){
-            this.routes.forEach(route => {
-                console.log(window.location.hash.substr(2));
-                if(route.isActiveRoute(window.location.hash.substr(1))){
-                    this.gotoRoute(route.htmlName, route.name);
-                }
-            });
+        let request = this.parseRequestURL();
+        let parsedURL = (request.resource ? '/' + request.resource: '/') + (request.id ? '/:id' : '') + (request.verb ? '/' + request.verb: '');
+        console.log('parsedURL=>', parsedURL);
+        if(parsedURL == '/'){
+            this.gotoRoute('teams.html', 'teams');
+        }
+        else if(parsedURL == '/teams/:id'){
+            this.gotoRoute('team.html', request.id);
+        }
+        else if(parsedURL == '/error'){
+            this.gotoRoute('team.html', request.id);
         }else{
-            this.routes.forEach(route=>{
-                if(route.defaultRoute)  {
-                    this.gotoRoute(route.htmlName, route.name);
-                }
-            });
+            this.gotoRoute('error404.html', 'error404');
         }
     }
     
@@ -39,6 +38,21 @@ class Router{
         this.hashChanged();
     }
 
+    parseRequestURL(){
+        let url = location.hash.slice(1).toLocaleLowerCase() || '/';
+        let r = url.split('/');
+        let request = {
+            resource: null,
+            id: null,
+            verb: null
+        }
+        request.resource = r[1];
+        request.id = r[2];
+        request.verb = r[3];
+
+        return request;
+    }
+
     gotoRoute(htmlName, name){
         const url = 'views/'+htmlName;
         console.log('got error error', htmlName, name);
@@ -50,11 +64,17 @@ class Router{
                 if(name == 'teams'){
                     getAllTeams();
                 }
+                else if(name == 'error404'){
+                    console.log('name is error404');
+                    window.location.hash = '/error404'
+                    stopLoader();
+                }
                 else if(name == 'error'){
-                    console.log('error page loaded');
-                    window.location.hash = '/error';
+                    console.log('name is error404');
+                    window.location.hash = '/error'
                     stopLoader();
                 }else{
+                    console.log('team data');
                     getTeamData(name);
                 }
             }

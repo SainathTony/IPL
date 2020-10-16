@@ -16,6 +16,7 @@ class Route{
         this.defaultRoute = defaultRoute;
     }
 
+
     isActiveRoute(path){
         console.log('Comparing', path, 'and', this.name);
         return path.replace('/', '') === this.name;
